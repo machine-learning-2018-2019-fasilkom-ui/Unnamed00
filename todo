@@ -1,0 +1,7 @@
+- dataset preprocessing
+  -read
+  -split
+  -bagging sampling (10 sample sets) : use npm as seed
+- SVM (if possible) or change to Log Reg
+- Bagging
+  -voting method
