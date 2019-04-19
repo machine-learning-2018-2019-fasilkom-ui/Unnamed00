@@ -42,7 +42,7 @@ class SVM:
                         for i in range(self.data.shape[0]):
                             #print(np.array([w_t]).T @ np.array(self.data[i]))
                             print(self.label[i] * np.dot([w_t], self.data[i]) + b)
-                            if not (self.label[i] * np.dot([w_t], self.data[i]) + b) >= 1:
+                            if not ((self.label[i] * np.dot([w_t], self.data[i]) + b) >= 1 or (self.label[i] * np.dot([w_t], self.data[i]) + b) <= -1 )  :
                                 found_option = False
                                 break
                         if found_option:
@@ -58,6 +58,6 @@ class SVM:
             latest_optimum = optimal_choice[0][0] + step*2
 
     def predict(self, data):
-        label = np.sign(data @ self.weight + b)
+        return np.sign(data @ self.w + self.b)
 
 

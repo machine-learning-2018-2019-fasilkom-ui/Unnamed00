@@ -5,7 +5,7 @@ import pandas as pd
 class PCA:
     def __init__(self):
         self.data = None
-        self.threshold = 0.8
+        self.threshold = 0.95
 
     def calculate_mean(self, arr):
         return ftools.reduce(lambda x,y: x+y, arr)/len(arr)
