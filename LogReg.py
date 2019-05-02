@@ -2,10 +2,11 @@ import numpy as np
 import random
 
 class LogReg:
-    def __init__(self):
+    def __init__(self, is_verbose = True):
         self.theta = None
         self.num_epoch = 100
         self.learning_rate = 0.001
+        self.is_verbose = is_verbose
 
     def sigmoid(self, e):
         return 1.0 / (1 + np.exp(-e))
@@ -21,6 +22,7 @@ class LogReg:
         y_hat = self.predict(x)
         self.theta = self.update_theta(x, y_hat, y)
         return y_hat
+
     def update_theta(self, x, y_hat, y) :
         return self.theta + self.learning_rate * (y - y_hat) * x
 
@@ -29,7 +31,8 @@ class LogReg:
         if mode == 'random':
             for i in range(0, size):
                 self.theta[i] = random.randint(-100,100)
-        print("Initial theta = %s" % (self.theta))
+        if self.is_verbose:
+            print("Initial theta = %s" % (self.theta))
 
     #initial_theta options : default = all 0
     #                      : random = randomize initial theta
@@ -45,7 +48,8 @@ class LogReg:
         max_accuracy = 0
         for i in range(0, self.num_epoch):
             false_count = 0
-            print("Running with mode %s with learning rate %f. Number of epoch %d" % (initial_theta, self.learning_rate, self.num_epoch))
+            if self.is_verbose:
+                print("Running with mode %s with learning rate %f. Number of epoch %d" % (initial_theta, self.learning_rate, self.num_epoch))
             for j in range(0, len(Y)):
                 y_hat = self.train(X[j], Y[j])
                 if y_hat != Y[j]:
@@ -53,7 +57,9 @@ class LogReg:
             accuracy = (1 - (false_count/len(Y))) * 100
             min_accuracy = min(accuracy, min_accuracy)
             max_accuracy = max(accuracy, max_accuracy)
-            print("Epoch : %d. Current theta : %s. Accuracy : %.3f" % (i+1, self.theta, accuracy))
+            if self.is_verbose:
+                print("Epoch : %d. Current theta : %s. Accuracy : %.3f" % (i+1, self.theta, accuracy))
+
         print("Max accuracy = %.3f. Min accuracy = %.3f" % (max_accuracy, min_accuracy))
 
     def test(self, X, Y):
