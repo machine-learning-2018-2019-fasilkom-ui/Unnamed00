@@ -1,7 +1,8 @@
-- dataset preprocessing
+- dataset preprocessing (done)
   -read
   -split
   -bagging sampling (10 sample sets) : use npm as seed
-- SVM (if possible) or change to Log Reg
-- Bagging
+- SVM (if possible) or change to Log Reg (logreg-done) (svm-use the one from homework)
+- MLP as comparison (library)
+- Bagging (done)
   -voting method

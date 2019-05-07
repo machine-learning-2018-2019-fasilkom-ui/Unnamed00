@@ -2,11 +2,11 @@ import numpy as np
 import random
 
 class LogReg:
-    def __init__(self, is_verbose = True):
+    def __init__(self, verbose = True, num_epoch=100):
         self.theta = None
         self.num_epoch = 100
         self.learning_rate = 0.001
-        self.is_verbose = is_verbose
+        self.is_verbose = verbose
 
     def sigmoid(self, e):
         return 1.0 / (1 + np.exp(-e))

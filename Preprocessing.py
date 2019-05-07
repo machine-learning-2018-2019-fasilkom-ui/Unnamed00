@@ -1,19 +1,20 @@
 import numpy as np
 import pandas as pd
 from pandas.api.types import is_numeric_dtype
-from numpy.random import seed, randint
+from numpy.random import seed, choice
 from PCA import PCA
 
 class Preprocessing:
-    def __init__(self):
-        self.filename = 'dataset_ADD.txt'
+    def __init__(self, filename="dataset_ADD.txt", seed = 1806169585, verbose=True):
+        self.filename = filename
         self.full_data = pd.DataFrame()
         self.full_label_data = None
         self.training_set = None
         self.training_label = None
         self.test_set = None
         self.test_label = None
-        self.seed = 1806169585
+        self.seed = seed
+        self.verbose = verbose
 
     def read_data(self, filename=None, seed=None):
         if filename is not None:
@@ -56,7 +57,7 @@ class Preprocessing:
 
     #reduce dimensionality using PCA
     def reduce_data(self, threshold=None):
-        pca = PCA()
+        pca = PCA(verbose=self.verbose)
         if threshold is not None:
             self.full_data = pca.reduce_dimensions(self.full_data, threshold)
         else:
@@ -66,20 +67,19 @@ class Preprocessing:
     def split_data(self):
 
         train_size =int(0.8 * self.full_data.shape[0])
-
         seed(self.seed)
-        train_index = randint(0, self.full_data.shape[0], train_size)
-
-        #print(train_index)
+        train_index = choice(self.full_data.shape[0], train_size, False)
+        test_index = np.array([i for i in range(self.full_data.shape[0]) if i not in train_index])
         #print(self.full_data.shape)
 
         self.training_set = self.full_data.iloc[train_index,:]
-        self.test_set = self.full_data[~self.full_data.index.isin(train_index)]
+        self.test_set = self.full_data.iloc[test_index, :]
         self.training_label = self.full_label_data[train_index]
-        self.test_label = np.delete(self.full_label_data, train_index, axis=0)
+        self.test_label = self.full_label_data[test_index]
         #print(self.training_set.shape, self.training_label.shape, self.test_set.shape, self.test_label.shape)
 
         self.training_set = self.training_set.to_numpy()
         self.test_set = self.test_set.to_numpy()
 
-
+        print("Training data : (%d, %d)" % (self.training_set.shape[0], self.training_set.shape[1]))
+        print("Test data : (%d, %d)" % (self.test_set.shape[0], self.test_set.shape[1]))

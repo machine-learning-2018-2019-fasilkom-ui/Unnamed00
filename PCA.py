@@ -3,9 +3,10 @@ import numpy as np
 import pandas as pd
 
 class PCA:
-    def __init__(self):
+    def __init__(self, verbose=True):
         self.data = None
         self.threshold = 0.95
+        self.verbose = verbose
 
     def calculate_mean(self, arr):
         return ftools.reduce(lambda x,y: x+y, arr)/len(arr)
@@ -47,14 +48,20 @@ class PCA:
         self.calculate_centered_columns_data(means)
         covmats = self.calculate_covariance_matrix()
         sorted_eigen_values, sorted_basis_vector = self.calculate_eigen_values(covmats)
-        print(sorted_eigen_values)
+        if self.verbose:
+            print("Sorted eigen values :\n")
+            print(sorted_eigen_values)
 
         #get samllest dimensionality based on eigen values and threshold
         smallest_dimensionality = self.calculate_smallest_dimensionality(sorted_eigen_values, self.threshold)
-        print(data.shape, sorted_basis_vector.shape, smallest_dimensionality)
+
+        print("Dimensionality reduction result : ")
+        print("  - Final data feature size : %d" %(smallest_dimensionality))
 
         #calculate transformed data by multiplying centered data with basis vector
         self.data = np.dot(data, sorted_basis_vector[:,:smallest_dimensionality])
-
+        print("  - Final data feature matrix : (%d, %d)" % (self.data.shape[0], self.data.shape[1]))
+        if self.verbose :
+            print(self.data)
         return pd.DataFrame(self.data)
 
