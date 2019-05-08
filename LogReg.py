@@ -2,11 +2,12 @@ import numpy as np
 import random
 
 class LogReg:
-    def __init__(self, verbose = True, num_epoch=100):
+    def __init__(self, verbose = True, num_iter=100, mode='default', learning_rate = 0.001):
         self.theta = None
-        self.num_epoch = 100
-        self.learning_rate = 0.001
+        self.num_iter = 100
+        self.learning_rate = learning_rate
         self.is_verbose = verbose
+        self.theta_mode = mode
 
     def sigmoid(self, e):
         return 1.0 / (1 + np.exp(-e))
@@ -26,30 +27,25 @@ class LogReg:
     def update_theta(self, x, y_hat, y) :
         return self.theta + self.learning_rate * (y - y_hat) * x
 
-    def initiate_theta(self, mode, size):
+    def initiate_theta(self, size):
         self.theta = np.zeros(size)
-        if mode == 'random':
+        if self.theta_mode == 'random':
             for i in range(0, size):
-                self.theta[i] = random.randint(-100,100)
+                self.theta[i] = random.randint(-10,10)
         if self.is_verbose:
             print("Initial theta = %s" % (self.theta))
 
     #initial_theta options : default = all 0
     #                      : random = randomize initial theta
-    def fit(self, X, Y, num_epoch=None, learning_rate = None, initial_theta = 'default'):
-        if num_epoch is not None:
-            self.num_epoch = num_epoch
-        if learning_rate is not None :
-            self.learning_rate = learning_rate
-
-        self.initiate_theta(initial_theta, X.shape[1])
+    def fit(self, X, Y):
+        self.initiate_theta(X.shape[1])
 
         min_accuracy = 100
         max_accuracy = 0
-        for i in range(0, self.num_epoch):
+        for i in range(0, self.num_iter):
             false_count = 0
             if self.is_verbose:
-                print("Running with mode %s with learning rate %f. Number of epoch %d" % (initial_theta, self.learning_rate, self.num_epoch))
+                print("Running with mode %s with learning rate %f. Number of interation %d" % (self.theta_mode, self.learning_rate, self.num_iter))
             for j in range(0, len(Y)):
                 y_hat = self.train(X[j], Y[j])
                 if y_hat != Y[j]:
@@ -57,8 +53,8 @@ class LogReg:
             accuracy = (1 - (false_count/len(Y))) * 100
             min_accuracy = min(accuracy, min_accuracy)
             max_accuracy = max(accuracy, max_accuracy)
-            if self.is_verbose:
-                print("Epoch : %d. Current theta : %s. Accuracy : %.3f" % (i+1, self.theta, accuracy))
+            #if self.is_verbose:
+                #print("Iteration : %d. Current theta : %s. Accuracy : %.3f" % (i+1, self.theta, accuracy))
 
         print("Max accuracy = %.3f. Min accuracy = %.3f" % (max_accuracy, min_accuracy))
 
