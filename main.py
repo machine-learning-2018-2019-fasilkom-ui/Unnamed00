@@ -101,7 +101,7 @@ def create_models(N, num_iter, verbose, alg_type=None, kernel=kernels.linear, C=
         elif alg_type == svm:
             models.append(svm(verbose, kernel, C, degree, sigma))
         elif alg_type == libalg:
-            models.append(libalg(libalg_type))
+            models.append(libalg(libalg_type, num_iter))
         else:
             raise Exception("Unsupported algorithm type : %s" %(alg_type))
 
@@ -112,11 +112,11 @@ def create_models(N, num_iter, verbose, alg_type=None, kernel=kernels.linear, C=
 #  - SVM
 #  - MLP Classifier
 #solver_ = 'lbfgs', alpha_ = 1e-5, l_rate_ = 0.0001, layer_ = (5,2), random_state_ = 1, num_iter = 200):
-def libalg(algorithm):
+def libalg(algorithm, num_iter):
     if algorithm == 0:
         return LibSVM()
     elif algorithm == 1:
-        return LibMLP()
+        return LibMLP(num_iter = num_iter)
 
 #create a logistic regression model
 def logistic_regression(is_verbose, num_iter):
@@ -133,7 +133,22 @@ def svm(is_verbose, kernel, C, degree, sigma):
     return model
 
 
-train_test_with_bagging(False, 15, False, 0.999, 1, 10000)
-#train_test_without_bagging(False, False, 0.999, 1, 10000)
-train_test_with_bagging(False, 15, True, 0.999, 1, 10000)
-#train_test_without_bagging(False, True, 0.999, 1, 10000)
+# train_test_with_bagging(verbose, models, use_pca, threshold, alg_type, num_iter)
+# train_test_without_bagging(verbose, use_pca, threshold, alg_type, num_iter)
+#alg_type :
+# - 0 : SVM without library
+# - 1 : logistic regression
+# - 2 : SVM with library
+# - 3 : MLP
+
+train_test_with_bagging(False, 15, False, 0.99, 3, 100)
+train_test_with_bagging(False, 10, False, 0.99, 3, 100)
+train_test_without_bagging(False, False, 0.99, 3, 100)
+print("\n")
+train_test_with_bagging(False, 15, True, 0.99, 3, 100)
+train_test_with_bagging(False, 10, True, 0.99, 3, 100)
+train_test_without_bagging(False, True, 0.99, 3, 100)
+print("\n")
+train_test_with_bagging(False, 15, True, 0.999, 3, 100)
+train_test_with_bagging(False, 10, True, 0.999, 3, 100)
+train_test_without_bagging(False, True, 0.999, 3, 100)

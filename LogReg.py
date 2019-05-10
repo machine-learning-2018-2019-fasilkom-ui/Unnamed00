@@ -4,10 +4,11 @@ import random
 class LogReg:
     def __init__(self, verbose = True, num_iter=100, mode='default', learning_rate = 0.001):
         self.theta = None
-        self.num_iter = 100
+        self.num_iter = num_iter
         self.learning_rate = learning_rate
         self.is_verbose = verbose
         self.theta_mode = mode
+        random.seed(1806169585)
 
     def sigmoid(self, e):
         return 1.0 / (1 + np.exp(-e))

@@ -18,4 +18,4 @@ class LibMLP():
             if y_hat == Y[i]:
                 true_count += 1
 
-        return (100 * tru_count / len(Y))
+        return (100 * true_count / len(Y))
